@@ -32,7 +32,7 @@ function sendMessageToHub(messageDTO) {
 }
 
 function checkUserConnectedStatus() {
-    connection.invoke('CheckUserConnectedStatus');
+    connection.invoke('CheckUserConnectedStatus', currentUserId);
 }
 
 connection.on('UpdateUserConnectedStatus', updateUserConnectedStatus);

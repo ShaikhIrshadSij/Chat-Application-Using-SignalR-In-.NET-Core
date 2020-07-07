@@ -36,14 +36,15 @@ namespace FuseChatify.Hubs
             await Clients.User(toUserId).SendAsync("UserTypingStopped", fromUserId);
         }
 
-        public async Task CheckUserConnectedStatus()
+        public async Task CheckUserConnectedStatus(string fromUserId)
         {
             var userConnectionList = _context.UserConnections.Select(x => new
             {
                 UserId = x.UserId,
                 IsConnected = x.Connected
             }).ToList();
-            await Clients.All.SendAsync("UpdateUserConnectedStatus", userConnectionList);
+            var currentUserFriends = _context.UserFriendLists.Where(x => x.FromUserId == fromUserId).Select(x => x.ToUserId).ToList();
+            await Clients.Users(currentUserFriends).SendAsync("UpdateUserConnectedStatus", userConnectionList);
         }
 
         public override Task OnConnectedAsync()
